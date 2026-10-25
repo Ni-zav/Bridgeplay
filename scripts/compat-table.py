@@ -8,7 +8,7 @@ ORDER = ["platinum", "gold", "silver", "bronze", "borked", "untested"]
 
 
 def cell(v):
-    return "-" if v in (None, "") else str(v).replace("|", "\\|").replace("\n", " ")
+    return "-" if v in (None, "") else str(v).replace("\\", "\\\\").replace("|", "\\|").replace("\r", " ").replace("\n", " ")
 
 
 def status_of(game):
