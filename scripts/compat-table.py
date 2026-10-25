@@ -11,10 +11,14 @@ def cell(v):
     return "-" if v in (None, "") else str(v).replace("|", "\\|").replace("\n", " ")
 
 
+def status_of(game):
+    return game.get("status") or "untested"
+
+
 def main():
     games = json.load(open(os.path.join(ROOT, "compat", "games.json")))
-    games.sort(key=lambda g: (ORDER.index(g.get("status", "untested")), g["name"].lower()))
-    counts = {s: sum(1 for g in games if g.get("status") == s) for s in ORDER}
+    games.sort(key=lambda g: (ORDER.index(status_of(g)), g["name"].lower()))
+    counts = {s: sum(1 for g in games if status_of(g) == s) for s in ORDER}
     lines = [
         "# Compatibility list",
         "",
@@ -31,7 +35,7 @@ def main():
     ]
     for g in games:
         lines.append("| " + " | ".join(cell(x) for x in (
-            g["name"], g["appid"], g.get("status"), g.get("tested_on"), g.get("backend"), g.get("engine"), g.get("api"),
+            g["name"], g["appid"], status_of(g), g.get("tested_on"), g.get("backend"), g.get("engine"), g.get("api"),
             g.get("anticheat"), g.get("last_tested"), g.get("fork_commit"), g.get("notes"))) + " |")
     open(os.path.join(ROOT, "compat", "README.md"), "w").write("\n".join(lines) + "\n")
 
