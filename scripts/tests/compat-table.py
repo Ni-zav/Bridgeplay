@@ -34,7 +34,7 @@ class CompatTableTests(unittest.TestCase):
         self.assertLess(contents.index("Working | 1"), contents.index("Missing status | 2"))
 
     def test_markdown_cells_keep_backslashes_pipes_and_line_breaks_in_one_row(self):
-        self.assertEqual(r"path\\\\\|pipe  next", table.cell("path\\|pipe\r\nnext"))
+        self.assertEqual(r"path\\\|pipe  next", table.cell("path\\|pipe\r\nnext"))
         self.assertEqual("-", table.cell(None))
 
 
