@@ -13,7 +13,8 @@ case "$1" in
     1) printf '%s\n' '{"appid":1,"name":"One","backend":"dxmt","verdict":"running","seconds_alive":3}'; exit 0 ;;
     2) printf '%s\n' '{"appid":2,"name":"Two","backend":"dxmt","verdict":"crashed","seconds_alive":2}'; exit 1 ;;
     3) echo invalid-json; exit 2 ;;
-    4) printf '%s\n' '{"appid":4}'; exit 0 ;;\n    5) printf '%s\n' '{"appid":99,"name":"Wrong game","backend":"dxmt","verdict":"running","seconds_alive":3}'; exit 0 ;;
+    4) printf '%s\n' '{"appid":4}'; exit 0 ;;
+    5) printf '%s\n' '{"appid":99,"name":"Wrong game","backend":"dxmt","verdict":"running","seconds_alive":3}'; exit 0 ;;
     *) exit 64 ;;
 esac
 SCRIPT
