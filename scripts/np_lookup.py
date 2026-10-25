@@ -5,6 +5,7 @@ templates; its Cargo API is closed to anonymous queries), AreWeAntiCheatYet game
 """
 import json
 import re
+import sys
 import time
 import urllib.parse
 import urllib.request
@@ -84,10 +85,14 @@ def awacy(appid):
     """-> (status, [anticheats]) from AreWeAntiCheatYet, or (None, [])."""
     global _awacy
     if _awacy is None:
-        raw = _get("https://raw.githubusercontent.com/AreWeAntiCheatYet/AreWeAntiCheatYet/HEAD/games.json")
-        _awacy = {str(g.get("storeIds", {}).get("steam")): g for g in json.loads(raw)}
+        try:
+            raw = _get("https://raw.githubusercontent.com/AreWeAntiCheatYet/AreWeAntiCheatYet/HEAD/games.json")
+            _awacy = {str(g.get("storeIds", {}).get("steam")): g for g in json.loads(raw)}
+        except (OSError, ValueError, TypeError, AttributeError) as exc:
+            print(f"anti-cheat feed unavailable ({exc}); continuing without it", file=sys.stderr)
+            _awacy = {}
     g = _awacy.get(str(appid))
-    return (g["status"], g.get("anticheats", [])) if g else (None, [])
+    return (g.get("status"), g.get("anticheats", [])) if g else (None, [])
 
 
 def api_summary(info):
