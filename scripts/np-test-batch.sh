@@ -16,9 +16,10 @@ for id in "$@"; do
     echo "np-test-batch: game $id exited with status $rc" >&2
     failed=1
   fi
-  if ! printf '%s\n' "$out" | jq -er '
+  if ! printf '%s\n' "$out" | jq -er --arg expected "$id" '
     select(type == "object" and
            (.appid | type == "number") and
+           (.appid | tostring == $expected) and
            (.name | type == "string") and
            (.backend | type == "string") and
            (.verdict | type == "string") and
