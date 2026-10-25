@@ -23,10 +23,17 @@ def legacy(t):
     return re.sub(r"\bBRIDGEPLAY_", "NOTPROTON_", t.replace("/.bridgeplay/", "/.notproton/"))
 
 
+if len(sys.argv) < 4:
+    raise SystemExit("usage: steam-launch-options.py <localconfig.vdf> <TOKEN> <appid...>")
 path, token = sys.argv[1], public(sys.argv[2])
 spellings = {token, legacy(token)}
 ids = set(sys.argv[3:])
-lines = open(path, encoding="utf-8").read().split("\n")
+if not token or any(not re.fullmatch(r"[0-9]+", appid) for appid in ids):
+    raise SystemExit("expected a nonempty token and numeric Steam app IDs")
+with open(path, encoding="utf-8", newline="") as f:
+    original = f.read()
+newline = "\r\n" if "\r\n" in original else "\n"
+lines = original.replace("\r\n", "\n").split("\n")
 out, done, in_apps, i = [], set(), False, 0
 while i < len(lines):
     line = lines[i]
@@ -41,6 +48,8 @@ while i < len(lines):
         while i < len(lines) and lines[i] != "\t\t\t\t\t}":
             block.append(lines[i])
             i += 1
+        if i == len(lines):
+            raise SystemExit("unterminated Steam app block; localconfig.vdf was not changed")
         found = False
         for k, b in enumerate(block):
             mm = re.fullmatch(r'(\t{6}"LaunchOptions"\t\t")(.*)(")', b)
@@ -57,5 +66,8 @@ while i < len(lines):
         done.add(m.group(1))
         continue
     i += 1
-open(path, "w", encoding="utf-8").write("\n".join(out))
+updated = "\n".join(out).replace("\n", newline)
+if updated != original:
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        f.write(updated)
 print("updated", sorted(done), "missing", sorted(ids - done))
