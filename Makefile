@@ -190,6 +190,11 @@ compat-reported-check:
 	@if [ ! -f scripts/tests/compat-reported-commit.sh ]; then $(call SKIP,compat-reported-check,scripts/tests/compat-reported-commit.sh); exit 0; fi; \
 	sh scripts/tests/compat-reported-commit.sh
 
+# Offline regression for compat-table-check.
+.PHONY: compat-table-check
+compat-table-check:
+	@python3 scripts/tests/compat-table.py
+
 # Offline test for compatible wiki pages with more than one Steam app ID.
 .PHONY: compat-reported-import-check
 compat-reported-import-check:
@@ -883,11 +888,6 @@ native-shim-tests:
 .PHONY: np-inventory-check
 np-inventory-check:
 	@python3 scripts/tests/np-inventory.py
-
-# Offline regression for compat-table-check.
-.PHONY: compat-table-check
-compat-table-check:
-	@python3 scripts/tests/compat-table.py
 
 # Every check .github/workflows/app.yml runs, after `make app`.
 # scripts/build-local.sh --checks runs this same target, so a local release build
