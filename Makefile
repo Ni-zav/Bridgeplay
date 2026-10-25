@@ -117,6 +117,11 @@ cicheck:
 	@if [ ! -f scripts/tests/cicheck.sh ]; then $(call SKIP,cicheck,scripts/tests/cicheck.sh); exit 0; fi; \
 	sh scripts/tests/cicheck.sh
 
+# Offline regression for steam-launch-options-check.
+.PHONY: steam-launch-options-check
+steam-launch-options-check:
+	@python3 scripts/tests/steam-launch-options.py
+
 # Validate batch exit statuses without starting games.
 .PHONY: np-test-batch-check
 np-test-batch-check:
@@ -883,11 +888,6 @@ native-shim-tests:
 .PHONY: np-inventory-check
 np-inventory-check:
 	@python3 scripts/tests/np-inventory.py
-
-# Offline regression for steam-launch-options-check.
-.PHONY: steam-launch-options-check
-steam-launch-options-check:
-	@python3 scripts/tests/steam-launch-options.py
 
 # Every check .github/workflows/app.yml runs, after `make app`.
 # scripts/build-local.sh --checks runs this same target, so a local release build
