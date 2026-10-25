@@ -13,7 +13,7 @@ case "$1" in
     1) printf '%s\n' '{"appid":1,"name":"One","backend":"dxmt","verdict":"running","seconds_alive":3}'; exit 0 ;;
     2) printf '%s\n' '{"appid":2,"name":"Two","backend":"dxmt","verdict":"crashed","seconds_alive":2}'; exit 1 ;;
     3) echo invalid-json; exit 2 ;;
-    4) printf '%s\n' '{"appid":4}'; exit 0 ;;
+    4) printf '%s\n' '{"appid":4}'; exit 0 ;;\n    5) printf '%s\n' '{"appid":99,"name":"Wrong game","backend":"dxmt","verdict":"running","seconds_alive":3}'; exit 0 ;;
     *) exit 64 ;;
 esac
 SCRIPT
@@ -32,4 +32,8 @@ grep -q 'game 2 exited with status 1' "$work/err"
 grep -q 'game 3 exited with status 2' "$work/err"
 grep -q 'no valid result for game 3' "$work/err"
 grep -q 'no valid result for game 4' "$work/err"
-echo 'np-test-batch: success, failure and invalid results checked'
+if bash "$work/np-test-batch.sh" 5 > "$work/out" 2> "$work/err"; then
+    echo 'result for another app ID must fail the batch' >&2; exit 1
+fi
+grep -q 'no valid result for game 5' "$work/err"
+echo 'np-test-batch: success, failure, invalid results and mismatched app IDs checked'
