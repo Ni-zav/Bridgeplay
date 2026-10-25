@@ -35,7 +35,6 @@ def installed_manifests():
 
     for steamapps in dict.fromkeys(os.path.realpath(p) for p in libraries):
         for manifest in sorted(glob.glob(os.path.join(steamapps, "appmanifest_*.acf"))):
-            appid = os.path.basename(manifest)[len("appmanifest_"):-len(".acf")]
             yield manifest
 
 
