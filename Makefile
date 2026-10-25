@@ -884,12 +884,17 @@ native-shim-tests:
 np-inventory-check:
 	@python3 scripts/tests/np-inventory.py
 
+# Offline regression for np-lookup-check.
+.PHONY: np-lookup-check
+np-lookup-check:
+	@python3 scripts/tests/np-lookup.py
+
 # Every check .github/workflows/app.yml runs, after `make app`.
 # scripts/build-local.sh --checks runs this same target, so a local release build
 # and CI gate on one list. Each check runs even when an earlier one failed.
 # overlay-shim-tests is left out: it needs a Metal GPU and real frame timing.
 CI_CHECKS := mincheck l10ncheck \
-	sigcheck callscheck np-test-batch-check webpatch-fixtures peicon-fixtures panel-behavior spawn-env \
+	sigcheck callscheck np-test-batch-check webpatch-fixtures peicon-fixtures panel-behavior spawn-env np-lookup-check \
 	activatecheck compat-reported-import-check compatcheck compatsvc-check prefixstate-check shortcutcheck launch-shell envcheck \
 	buildcheck settingscheck routecheck bridgecheck envpasscheck prefixnotecheck powernotecheck exitcheck gamedrivecheck launchercheck \
 	seedcheck gamefixescheck versioncheck cicheck padcheck compat-reported-check np-inventory-check np-native-tests native-shim-tests \
